@@ -1,8 +1,9 @@
 #!/bin/bash
 
 set -e
+HOME=/app
 LOGDIR=/var/log/app
-PROCFILE=/app/Procfile
+PROCFILE=${HOME}/Procfile
 [ ! -d $LOGDIR ] && mkdir -p $LOGDIR
 for file in $HOME/.profile.d/*; do source $file; done
 hash -r
