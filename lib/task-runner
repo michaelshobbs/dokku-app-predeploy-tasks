@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+LOGDIR=/var/log/app
+PROCFILE=/app/Procfile
+[ ! -d $LOGDIR ] && mkdir -p $LOGDIR
+for file in $HOME/.profile.d/*; do source $file; done
+hash -r
+cat "$PROCFILE" | while read line; do
+  if [ ! -n "$line" ]; then
+    continue
+  fi
+  case "$line" in
+    assets*|db-migrate*)
+      TASK=${line%%:*}
+      ruby -e "require 'yaml';puts YAML.load_file('Procfile')['${TASK}']" | bash | tee -a ${LOGDIR}/${TASK}-runner.log
+    ;;
+    *)
+      continue
+      ;;
+  esac
+done

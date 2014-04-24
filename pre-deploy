@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
+APP="$1"
+IMAGE="dokku/$APP"
+
+PLUGIN_DIR=$(dirname $0)
+. "$PLUGIN_DIR/lib/helpers"
+
+# Check for Procfile
+id=$(docker run -d $IMAGE test -f app/Procfile)
+if [ $(docker wait $id) -ne 0 ]; then
+  echo "Procfile not found"
+  exit 0
+fi
+
+copy_to_container "$PLUGIN_DIR/lib/task-runner" /build/task-runner
+
+echo "-----> Injecting App Task Runner ..."
+id=$(docker run -d $IMAGE /bin/bash -c "/bin/bash /build/task-runner")
+test $(docker wait $id) -eq 0
+docker commit $id $IMAGE > /dev/null
