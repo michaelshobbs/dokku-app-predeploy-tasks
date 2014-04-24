@@ -11,12 +11,12 @@ cat "$PROCFILE" | while read line; do
     continue
   fi
   case "$line" in
-    assets*|db-migrate*)
+    web:*|worker:*|urgentworker:*|clock:*)
+      continue
+    ;;
+    *:)
       TASK=${line%%:*}
       ruby -e "require 'yaml';puts YAML.load_file('Procfile')['${TASK}']" | bash | tee -a ${LOGDIR}/${TASK}-runner.log
-    ;;
-    *)
-      continue
       ;;
   esac
 done
