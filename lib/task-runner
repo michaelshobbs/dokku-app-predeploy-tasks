@@ -16,6 +16,7 @@ cat "$PROCFILE" | while read line; do
     ;;
     *:)
       TASK=${line%%:*}
+      echo "      running task ${TASK}"
       ruby -e "require 'yaml';puts YAML.load_file('Procfile')['${TASK}']" | bash | tee -a ${LOGDIR}/${TASK}-runner.log
       ;;
   esac
