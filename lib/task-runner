@@ -7,6 +7,7 @@ PROCFILE=${HOME}/Procfile
 [ ! -d $LOGDIR ] && mkdir -p $LOGDIR
 for file in $HOME/.profile.d/*; do source $file; done
 hash -r
+cd $HOME
 cat "$PROCFILE" | while read line; do
   if [ ! -n "$line" ]; then
     continue
@@ -15,7 +16,7 @@ cat "$PROCFILE" | while read line; do
     web:*|worker:*|urgentworker:*|clock:*)
       continue
     ;;
-    *:)
+    *)
       TASK=${line%%:*}
       echo "      running task ${TASK}"
       ruby -e "require 'yaml';puts YAML.load_file('Procfile')['${TASK}']" | bash | tee -a ${LOGDIR}/${TASK}-runner.log
