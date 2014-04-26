@@ -1,6 +1,7 @@
 # dokku-app-predeploy-tasks
 
 Because sometimes you have to do things before you deploy...
+For use with [dokku](https://github.com/progrium/dokku)
 
 ## Notes
 
