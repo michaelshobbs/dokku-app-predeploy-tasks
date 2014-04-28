@@ -21,6 +21,10 @@ cat "$PROCFILE" | while read line; do
       echo "      running task ${TASK}"
       CMD=$(ruby -e "require 'yaml';puts YAML.load_file('Procfile')['${TASK}']")
       echo $CMD | bash -e | tee -a ${LOGDIR}/${TASK}-runner.log
+      if [ "$?" -ne 0 ];then
+        echo "${TASK} failed. aborting..."
+        exit $?
+      fi
       ;;
   esac
 done
