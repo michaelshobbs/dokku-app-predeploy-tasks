@@ -42,7 +42,8 @@ static: python manage.py collectstatic
 The name field is just a name you give the task. This can be anything except 'web', 'worker', 'urgentworker' or 'clock'
 that have special meanins in Dokku/Heroku.
 
-With this line installed you should on future git pushes see the output, for example:
+With this line installed you should on future git pushes see the output. For example, with the Django collecstatic line above,
+we should see the evidence of that being run everytime we deploy.
 
 ```
 $ git push dokku master
@@ -61,8 +62,8 @@ remote: HEAD is now at 5f24346... Fixed gitignore
 -----> Using Python runtime (python-2.7.6)
 -----> Installing dependencies using Pip (1.5.4)
        Cleaning up...
-<b>-----> Collecting static files
-       69 static files copied to '/app/staticfiles'.</b>
+-----> Collecting static files
+       69 static files copied to '/app/staticfiles'.
 ```
 
 The commands will be run in the order that they occur in the Procfile.
