@@ -1,5 +1,7 @@
 # dokku-app-predeploy-tasks
 
+For use with [dokku](https://github.com/progrium/dokku)
+
 A common requirement with Dokku deployments is you need to run a command on a newly built container,
 before an app is deployed. Common use cases include:
 
@@ -7,7 +9,6 @@ before an app is deployed. Common use cases include:
 * Running database migrations
 * Any commands required to set up the server (e.g. something like a Django collecstatic)
 
-For use with [dokku](https://github.com/progrium/dokku)
 
 ## Notes
 
@@ -38,7 +39,7 @@ add the following line to your applications Procfile
 static: python manage.py collectstatic
 ```
 
-The name field is just a name you give the task. This can be anything except 'web', 'worker', 'urgent worker' or 'clock'
+The name field is just a name you give the task. This can be anything except 'web', 'worker', 'urgentworker' or 'clock'
 that have special meanins in Dokku/Heroku.
 
 With this line installed you should on future git pushes see the output, for example:
@@ -60,8 +61,8 @@ remote: HEAD is now at 5f24346... Fixed gitignore
 -----> Using Python runtime (python-2.7.6)
 -----> Installing dependencies using Pip (1.5.4)
        Cleaning up...
------> Collecting static files
-       69 static files copied to '/app/staticfiles'.
+<b>-----> Collecting static files
+       69 static files copied to '/app/staticfiles'.</b>
 ```
 
 The commands will be run in the order that they occur in the Procfile.
