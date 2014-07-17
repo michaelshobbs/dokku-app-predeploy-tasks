@@ -4,6 +4,7 @@ set -e
 HOME=/app
 LOGDIR=/var/log/app
 PROCFILE=${HOME}/Procfile
+SCALEFILE=${HOME}/SCALE
 [ ! -d $LOGDIR ] && mkdir -p $LOGDIR
 for file in $HOME/.profile.d/*; do source $file; done
 hash -r
@@ -12,19 +13,26 @@ cat "$PROCFILE" | while read line; do
   if [ ! -n "$line" ]; then
     continue
   fi
-  case "$line" in
-    web:*|worker:*|urgentworker:*|clock:*)
-      continue
-    ;;
-    *)
-      TASK=${line%%:*}
+  TASK=${line%%:*}
+  if [ -f "$SCALEFILE" ]; then
+    SCALE=$(egrep "^$TASK=" "$SCALEFILE")
+    if [ -n "$SCALE" ]; then
+      NUM_PROCS=${SCALE#*=}
+    fi
+    if [ "$NUM_PROCS" -eq 0 ]; then
       echo "=====> running task ${TASK}"
       CMD=$(ruby -e "require 'yaml';puts YAML.load_file('Procfile')['${TASK}']")
-      echo $CMD | bash -e | tee -a ${LOGDIR}/${TASK}-runner.log
+      echo $CMD | bash -e
       if [ "$?" -ne 0 ];then
         echo "${TASK} failed. aborting..."
         exit $?
       fi
-      ;;
-  esac
+    fi
+  else
+    case "$line" in
+      web:*|worker:*|urgentworker:*|clock:*)
+        continue
+        ;;
+    esac
+  fi
 done
