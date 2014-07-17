@@ -54,7 +54,7 @@ static=0
 
 The name field is just a name you give the task. This can be any one-word name as long as the corresponding scale file entry is set to 0. If a SCALE file does not exist, we fall back to the previous functionality of blacklisting task names of 'web', 'worker', 'urgentworker' and 'clock'.
 
-With this line installed you should on future git pushes see the output. For example, with the Django collecstatic line above,
+With this configuration you should on future git pushes see the output. For example, with the Django collecstatic line above,
 we should see the evidence of that being run everytime we deploy.
 
 ```
