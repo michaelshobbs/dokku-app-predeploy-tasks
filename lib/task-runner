@@ -15,10 +15,11 @@ cat "$PROCFILE" | while read line; do
   fi
   TASK=${line%%:*}
   if [ -f "$SCALEFILE" ]; then
-    SCALE=$(egrep "^$TASK=" "$SCALEFILE")
-    if [ -n "$SCALE" ]; then
-      NUM_PROCS=${SCALE#*=}
+    SCALE=$(egrep "^$TASK=" "$SCALEFILE" || true)
+    if [ -z "$SCALE" ]; then
+      continue
     fi
+    NUM_PROCS=${SCALE#*=}
     if [ "$NUM_PROCS" -eq 0 ]; then
       echo "=====> running task ${TASK}"
       CMD=$(ruby -e "require 'yaml';puts YAML.load_file('Procfile')['${TASK}']")
