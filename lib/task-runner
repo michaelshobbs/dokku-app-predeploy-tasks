@@ -9,7 +9,7 @@ SCALEFILE=${HOME}/SCALE
 for file in $HOME/.profile.d/*; do source $file; done
 hash -r
 echo "restoring installation cache..."
-cp -rfp /cache /app/ || true
+cp -rfp /cache /build/ || true
 cd $HOME
 cat "$PROCFILE" | while read line; do
   if [ ! -n "$line" ]; then
@@ -39,3 +39,5 @@ cat "$PROCFILE" | while read line; do
     esac
   fi
 done
+echo "removing installation cache..."
+rm -rf /build/cache
