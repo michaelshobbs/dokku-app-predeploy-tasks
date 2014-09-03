@@ -18,6 +18,6 @@ copy_to_container "$PLUGIN_DIR/lib/task-runner" /build/task-runner
 
 echo "-----> Injecting App Task Runner ..."
 id=$(docker run -d $IMAGE /bin/bash -c "/bin/bash /build/task-runner")
-docker logs -f $id
+docker attach $id
 test $(docker wait $id) -eq 0
 docker commit $id $IMAGE > /dev/null
