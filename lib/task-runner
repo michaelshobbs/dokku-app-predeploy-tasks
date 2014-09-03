@@ -8,6 +8,8 @@ SCALEFILE=${HOME}/SCALE
 [ ! -d $LOGDIR ] && mkdir -p $LOGDIR
 for file in $HOME/.profile.d/*; do source $file; done
 hash -r
+echo "restoring installation cache..."
+cp -rfp /cache /app/ || true
 cd $HOME
 cat "$PROCFILE" | while read line; do
   if [ ! -n "$line" ]; then
