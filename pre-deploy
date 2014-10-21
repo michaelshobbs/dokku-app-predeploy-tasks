@@ -16,7 +16,8 @@ fi
 copy_to_container "$PLUGIN_DIR/lib/task-runner" /build/task-runner
 
 echo "-----> Injecting App Task Runner ..."
-id=$(docker run -d -v $CACHE_DIR:/cache $IMAGE /bin/bash -c "/bin/bash /build/task-runner")
+DOCKER_ARGS=$(: | pluginhook docker-args $APP)
+id=$(docker run -d -v $CACHE_DIR:/cache $DOCKER_ARGS $IMAGE /bin/bash -c "/bin/bash /build/task-runner")
 docker attach $id
 test $(docker wait $id) -eq 0
 docker commit $id $IMAGE > /dev/null
