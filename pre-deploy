@@ -2,6 +2,11 @@
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
 APP="$1"; IMAGE="dokku/$APP"; CACHE_DIR="$DOKKU_ROOT/$APP/cache"
+DOKKU_PREDEPLOY_TASKS_LOG_DIR=${DOKKU_PREDEPLOY_TASKS_LOG_DIR:=/tmp/dokku-predeploy-tasks-logs}
+LOG_DATE="$(date +%Y-%m-%d-%H-%M-%S)"
+
+[[ -f "$DOKKU_ROOT/$APP/ENV" ]] && source "$DOKKU_ROOT/$APP/ENV"
+[[ ! -e "$DOKKU_PREDEPLOY_TASKS_LOG_DIR" ]] && mkdir -p "$DOKKU_PREDEPLOY_TASKS_LOG_DIR"
 
 PLUGIN_DIR=$(dirname $0)
 . "$PLUGIN_DIR/lib/helpers"
@@ -20,4 +25,5 @@ DOCKER_ARGS=$(: | pluginhook docker-args $APP)
 id=$(docker run -d -v $CACHE_DIR:/cache $DOCKER_ARGS $IMAGE /bin/bash -c "/bin/bash /usr/local/bin/task-runner")
 docker attach $id
 test $(docker wait $id) -eq 0
-docker commit $id $IMAGE > /dev/null
+docker commit "$id" "$IMAGE" > /dev/null
+docker logs "$id" > "$DOKKU_PREDEPLOY_TASKS_LOG_DIR/$LOG_DATE.log"
