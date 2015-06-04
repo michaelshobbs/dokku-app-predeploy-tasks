@@ -80,6 +80,7 @@ remote: HEAD is now at 5f24346... Fixed gitignore
 
 The commands will be run in the order that they occur in the Procfile.
 
+Task execution will be logged by default to `/tmp/dokku-predeploy-tasks-logs`. This behavior may be overridden by setting the `DOKKU_PREDEPLOY_TASKS_LOG_DIR` environment variable for your application.
 
 ## Thanks
 Thanks to [dokku-logging-supervisord](https://github.com/sehrope/dokku-logging-supervisord) for the pattern and helpers.
