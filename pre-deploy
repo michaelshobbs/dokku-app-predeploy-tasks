@@ -20,8 +20,10 @@ fi
 
 copy_to_container "$PLUGIN_DIR/lib/task-runner" /usr/local/bin/task-runner
 
+DOCKER_ARGS=$(: | pluginhook docker-args $APP deploy)
+DOCKER_ARGS+=$(: | pluginhook docker-args-deploy $APP)
+
 echo "-----> Injecting App Task Runner ..."
-DOCKER_ARGS=$(: | pluginhook docker-args $APP)
 id=$(docker run -d -v $CACHE_DIR:/cache $DOCKER_ARGS $IMAGE /bin/bash -c "/bin/bash /usr/local/bin/task-runner")
 docker attach $id
 test $(docker wait $id) -eq 0
