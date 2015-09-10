@@ -1,0 +1,4 @@
+[plugin]
+description = "run arbitrary app tasks prior to dokku's deploy phase"
+version = "0.1.0"
+[plugin.config]
