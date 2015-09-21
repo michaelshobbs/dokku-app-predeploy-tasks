@@ -7,7 +7,7 @@ before an app is deployed. Common use cases include:
 
 * Checking a database is initialised
 * Running database migrations
-* Any commands required to set up the server (e.g. something like a Django collecstatic)
+* Any commands required to set up the server (e.g. something like a Django `collectstatic`)
 
 ## Requirements
 
