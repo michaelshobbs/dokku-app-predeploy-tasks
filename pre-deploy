@@ -5,6 +5,11 @@ APP="$1"; IMAGE="dokku/$APP"; CACHE_DIR="$DOKKU_ROOT/$APP/cache"
 DOKKU_PREDEPLOY_TASKS_LOG_DIR=${DOKKU_PREDEPLOY_TASKS_LOG_DIR:=/tmp/dokku-predeploy-tasks-logs}
 LOG_DATE="$(date +%Y-%m-%d-%H-%M-%S)"
 
+if [[ -n $DOKKU_API_VERSION ]]; then
+  source "$PLUGIN_ENABLED_PATH/common/functions"
+  IMAGE=$(get_app_image_name $APP)
+fi
+
 [[ -f "$DOKKU_ROOT/$APP/ENV" ]] && source "$DOKKU_ROOT/$APP/ENV"
 [[ ! -e "$DOKKU_PREDEPLOY_TASKS_LOG_DIR" ]] && mkdir -p "$DOKKU_PREDEPLOY_TASKS_LOG_DIR" && chmod 700 "$DOKKU_PREDEPLOY_TASKS_LOG_DIR"
 
