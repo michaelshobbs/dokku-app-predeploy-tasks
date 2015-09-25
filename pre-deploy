@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
+PLUGIN_EXEC_CMD="pluginhook"
 APP="$1"; IMAGE="dokku/$APP"; CACHE_DIR="$DOKKU_ROOT/$APP/cache"
 DOKKU_PREDEPLOY_TASKS_LOG_DIR=${DOKKU_PREDEPLOY_TASKS_LOG_DIR:=/tmp/dokku-predeploy-tasks-logs}
 LOG_DATE="$(date +%Y-%m-%d-%H-%M-%S)"
@@ -8,6 +9,7 @@ LOG_DATE="$(date +%Y-%m-%d-%H-%M-%S)"
 if [[ -n $DOKKU_API_VERSION ]]; then
   source "$PLUGIN_ENABLED_PATH/common/functions"
   IMAGE=$(get_app_image_name $APP)
+  PLUGIN_EXEC_CMD="plugn trigger"
 fi
 
 [[ -f "$DOKKU_ROOT/$APP/ENV" ]] && source "$DOKKU_ROOT/$APP/ENV"
@@ -25,8 +27,8 @@ fi
 
 copy_to_container "$PLUGIN_DIR/lib/task-runner" /usr/local/bin/task-runner
 
-DOCKER_ARGS=$(: | pluginhook docker-args $APP deploy)
-DOCKER_ARGS+=$(: | pluginhook docker-args-deploy $APP)
+DOCKER_ARGS=$(: | $PLUGIN_EXEC_CMD docker-args $APP deploy)
+DOCKER_ARGS+=$(: | $PLUGIN_EXEC_CMD docker-args-deploy $APP)
 
 echo "-----> Injecting App Task Runner ..."
 id=$(docker run -d -v $CACHE_DIR:/cache $DOCKER_ARGS $IMAGE /bin/bash -c "/bin/bash /usr/local/bin/task-runner")
