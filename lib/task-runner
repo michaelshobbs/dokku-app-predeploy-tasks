@@ -2,31 +2,30 @@
 
 set -e
 HOME=/app
-LOGDIR=/var/log/app
 PROCFILE=${HOME}/Procfile
 SCALEFILE=${HOME}/SCALE
-[ ! -d $LOGDIR ] && mkdir -p $LOGDIR
+
 for file in $HOME/.profile.d/*; do source $file; done
 hash -r
 echo "restoring installation cache..."
 cp -rfp /cache /tmp/ || true
 cd $HOME
 cat "$PROCFILE" | while read line; do
-  if [ ! -n "$line" ]; then
+  if [[ ! -n "$line" ]]; then
     continue
   fi
   TASK=${line%%:*}
-  if [ -f "$SCALEFILE" ]; then
+  if [[ -f "$SCALEFILE" ]]; then
     SCALE=$(egrep "^$TASK=" "$SCALEFILE" || true)
-    if [ -z "$SCALE" ]; then
+    if [[ -z "$SCALE" ]]; then
       continue
     fi
     NUM_PROCS=${SCALE#*=}
-    if [ "$NUM_PROCS" -eq 0 ]; then
+    if [[ "$NUM_PROCS" -eq 0 ]]; then
       echo "=====> running task ${TASK}"
       CMD=$(ruby -e "require 'yaml';puts YAML.load_file('Procfile')['${TASK}']")
       echo $CMD | bash -e
-      if [ "$?" -ne 0 ];then
+      if [[ "$?" -ne 0 ]];then
         echo "${TASK} failed. aborting..."
         exit $?
       fi
