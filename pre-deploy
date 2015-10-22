@@ -32,7 +32,7 @@ DOCKER_ARGS+=$(: | $PLUGIN_EXEC_CMD docker-args-deploy $APP)
 
 echo "-----> Injecting App Task Runner ..."
 id=$(docker run -d -v $CACHE_DIR:/cache $DOCKER_ARGS $IMAGE /bin/bash -c "/bin/bash /usr/local/bin/task-runner")
-docker attach $id
+docker attach $id || true
 test $(docker wait $id) -eq 0
 docker commit "$id" "$IMAGE" > /dev/null
 UMASK=$(umask); umask 077; docker logs "$id" > "$DOKKU_PREDEPLOY_TASKS_LOG_DIR/predeploy-tasks-$LOG_DATE.log"; umask "$UMASK"
