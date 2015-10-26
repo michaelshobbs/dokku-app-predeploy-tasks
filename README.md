@@ -24,14 +24,14 @@ UPDATE: Similar to [dokku-logging-supervisord](https://github.com/sehrope/dokku-
 On the dokku server, you need to install the plugin in the standard Dokku way. Specifically:
 
 ```
+# dokku 0.4.x
+dokku plugin:install https://github.com/michaelshobbs/dokku-app-predeploy-tasks.git
+```
+```
 # dokku 0.3.x
 cd /var/lib/dokku/plugins
 git clone https://github.com/michaelshobbs/dokku-app-predeploy-tasks.git
 dokku plugins-install
-```
-```
-# dokku 0.4.x
-dokku plugin:install https://github.com/michaelshobbs/dokku-app-predeploy-tasks.git
 ```
 
 ## Usage
