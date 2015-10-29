@@ -10,10 +10,8 @@ hash -r
 echo "restoring installation cache..."
 cp -rfp /cache /tmp/ || true
 cd $HOME
-cat "$PROCFILE" | while read line; do
-  if [[ ! -n "$line" ]]; then
-    continue
-  fi
+while read line || [[ -n "$line" ]]; do
+  [[ -z "$line" ]] && continue
   TASK=${line%%:*}
   if [[ -f "$SCALEFILE" ]]; then
     SCALE=$(egrep "^$TASK=" "$SCALEFILE" || true)
@@ -37,6 +35,6 @@ cat "$PROCFILE" | while read line; do
         ;;
     esac
   fi
-done
+done < "$PROCFILE"
 echo "removing installation cache..."
 rm -rf /tmp/cache
