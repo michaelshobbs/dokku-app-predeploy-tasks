@@ -8,7 +8,8 @@ SCALEFILE=${HOME}/SCALE
 for file in $HOME/.profile.d/*; do source $file; done
 hash -r
 echo "restoring installation cache..."
-cp -rfp /cache /tmp/ || true
+rm -rf /tmp/cache || true
+ln -sf /cache /tmp/cache || true
 cd $HOME
 while read line || [[ -n "$line" ]]; do
   [[ -z "$line" ]] && continue
@@ -37,4 +38,4 @@ while read line || [[ -n "$line" ]]; do
   fi
 done < "$PROCFILE"
 echo "removing installation cache..."
-rm -rf /tmp/cache
+rm -f /tmp/cache || true
