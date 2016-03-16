@@ -1,6 +1,5 @@
 #!/bin/bash
-
-set -e
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 HOME=/app
 PROCFILE=${HOME}/Procfile
 SCALEFILE=${HOME}/SCALE
